@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ producer.name }} - Родопите отблизо{% endblock %}
+
+{% block content %}
+    <div class="mb-3">
+        <a href="{% url 'producer-list' %}" class="btn btn-outline-secondary btn-sm">&larr; Назад към производителите</a>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card shadow-sm">
+                {% if producer.image %}
+                    <img src="{{ producer.image.url }}" class="card-img-top" alt="{{ producer.name }}" style="max-height: 400px; object-fit: cover;">
+                {% endif %}
+                <div class="card-body p-4">
+                    <span class="badge bg-warning text-dark mb-2">{{ producer.get_product_type_display }}</span>
+                    <h1 class="fw-bold mb-3">{{ producer.name }}</h1>
+                    <p class="text-muted fs-5 mb-1">📍 Населено място: <strong>{{ producer.region }}</strong></p>
+                    <p class="text-muted fs-5">📞 Телефон за поръчки и връзка: <strong>{{ producer.phone }}</strong></p>
+                    <hr>
+                    <h5 class="fw-bold mt-4">За стопанството и продуктите:</h5>
+                    <p class="card-text fs-6" style="white-space: pre-line;">{{ producer.description }}</p>
+
+                    <div class="mt-4 text-muted small">
+                        Партньор: <strong>{{ producer.owner.username }}</strong> | Добавено на {{ producer.created_at|date:"d.m.Y" }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

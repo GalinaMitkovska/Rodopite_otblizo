@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Добавяне на производител - Родопите отблизо{% endblock %}
+
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm p-4">
+                <h2 class="fw-bold text-success mb-4 text-center">🍯 Ново стопанство / производител</h2>
+
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-success btn-lg">Запази</button>
+                        <a href="{% url 'producer-list' %}" class="btn btn-outline-secondary">Отказ</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

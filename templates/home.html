@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Начална страница - Родопите отблизо{% endblock %}
+
+{% block content %}
+<div class="p-5 mb-4 bg-white rounded-3 shadow-sm border">
+    <div class="container-fluid py-5">
+        <h1 class="display-5 fw-bold text-success">🌲 Добре дошли в Родопите отблизо!</h1>
+        <p class="col-md-8 fs-4 text-muted mt-3">
+            Вашият гид към магията на планината. Открийте скрити екопътеки, автентични местни производители, уютни места за настаняване и вдъхновяващи пътеписи.
+        </p>
+        <div class="mt-4">
+            <a href="{% url 'destination-list' %}" class="btn btn-success btn-lg me-2">Разгледай забележителностите</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

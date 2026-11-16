@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}Забележителности - Родопите отблизо{% endblock %}
+
+{% block content %}
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1 class="fw-bold text-success">🏔️ Забележителности в Родопите</h1>
+            <p class="text-muted">Открийте магията на планината – екопътеки, върхове, пещери и истории.</p>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="{% url 'destination-add' %}" class="btn btn-primary">+ Добави забележителност</a>
+        </div>
+    </div>
+
+    <div class="row">
+        {% for destination in destinations %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    {% if destination.image %}
+                        <img src="{{ destination.image.url }}" class="card-img-top" alt="{{ destination.name }}" style="height: 200px; object-fit: cover;">
+                    {% else %}
+                        <div class="bg-secondary text-white d-flex align-items-center justify-content-center" style="height: 200px;">
+                            <span>Няма снимка</span>
+                        </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <span class="badge bg-success mb-2">{{ destination.get_category_display }}</span>
+                        <h5 class="card-title fw-bold">{{ destination.name }}</h5>
+                        <p class="card-text text-muted small">📍 Район: {{ destination.region }}</p>
+                        <p class="card-text">{{ destination.description|truncatechars:90 }}</p>
+                    </div>
+                    <div class="card-footer bg-white border-top-0">
+                        <a href="{% url 'destination-detail' destination.pk %}" class="btn btn-outline-success btn-sm w-100">Виж повече</a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <div class="alert alert-warning text-center" role="alert">
+                    Все още няма добавени забележителности. Бъди първият, който ще добави!
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
