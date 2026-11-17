@@ -1,6 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, DetailView, ListView
+from django.views.generic import CreateView, DetailView, ListView, UpdateView, DeleteView
 from .forms import DestinationForm
 from .models import Destination
 
@@ -27,3 +27,17 @@ class DestinationCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
+
+
+class DestinationUpdateView(LoginRequiredMixin, UpdateView):
+    model = Destination
+    form_class = DestinationForm
+    template_name = 'destinations/destination_update.html'
+
+    def get_success_url(self):
+        return reverse_lazy('destination-detail', kwargs={'pk': self.object.pk})
+
+class DestinationDeleteView(LoginRequiredMixin, DeleteView):
+    model = Destination
+    template_name = 'destinations/destination_confirm_delete.html'
+    success_url = reverse_lazy('destination-list')

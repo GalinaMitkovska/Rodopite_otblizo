@@ -1,7 +1,7 @@
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, DetailView, ListView
+from django.views.generic import CreateView, DetailView, ListView, UpdateView, DeleteView
 from .forms import ProducerForm
 from .models import Producer
 
@@ -27,3 +27,17 @@ class ProducerCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.owner = self.request.user
         return super().form_valid(form)
+
+class ProducerUpdateView(LoginRequiredMixin, UpdateView):
+    model = Producer
+    form_class = ProducerForm
+    template_name = 'producers/producer_update.html'
+
+    def get_success_url(self):
+        return reverse_lazy('producer-detail', kwargs={'pk': self.object.pk})
+
+
+class ProducerDeleteView(LoginRequiredMixin, DeleteView):
+    model = Producer
+    template_name = 'producers/producer_confirm_delete.html'
+    success_url = reverse_lazy('producer-list')

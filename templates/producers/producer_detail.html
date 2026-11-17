@@ -3,30 +3,34 @@
 {% block title %}{{ producer.name }} - Родопите отблизо{% endblock %}
 
 {% block content %}
-    <div class="mb-3">
-        <a href="{% url 'producer-list' %}" class="btn btn-outline-secondary btn-sm">&larr; Назад към производителите</a>
-    </div>
-
+<div class="container my-4">
     <div class="row">
-        <div class="col-md-8 offset-md-2">
-            <div class="card shadow-sm">
-                {% if producer.image %}
-                    <img src="{{ producer.image.url }}" class="card-img-top" alt="{{ producer.name }}" style="max-height: 400px; object-fit: cover;">
-                {% endif %}
-                <div class="card-body p-4">
-                    <span class="badge bg-warning text-dark mb-2">{{ producer.get_product_type_display }}</span>
-                    <h1 class="fw-bold mb-3">{{ producer.name }}</h1>
-                    <p class="text-muted fs-5 mb-1">📍 Населено място: <strong>{{ producer.region }}</strong></p>
-                    <p class="text-muted fs-5">📞 Телефон за поръчки и връзка: <strong>{{ producer.phone }}</strong></p>
-                    <hr>
-                    <h5 class="fw-bold mt-4">За стопанството и продуктите:</h5>
-                    <p class="card-text fs-6" style="white-space: pre-line;">{{ producer.description }}</p>
+        <div class="col-md-8">
+            <h1 class="mb-3">{{ producer.name }}</h1>
+            <h4 class="text-muted mb-4">📍 {{ producer.region }} | Категория: {{ producer.get_product_type_display }}</h4>
 
-                    <div class="mt-4 text-muted small">
-                        Партньор: <strong>{{ producer.owner.username }}</strong> | Добавено на {{ producer.created_at|date:"d.m.Y" }}
-                    </div>
-                </div>
+            {% if producer.image %}
+                <img src="{{ producer.image.url }}" class="img-fluid rounded mb-4 shadow" alt="{{ producer.name }}" style="max-height: 400px; width: 100%; object-fit: cover;">
+            {% endif %}
+
+            <h3>За стопанството и продуктите</h3>
+            <p class="lead" style="white-space: pre-line;">{{ producer.description }}</p>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm p-3 mb-4">
+                <h4 class="text-success mb-3">🍯 Стопанство</h4>
+                <p><strong>Телефон:</strong> {{ producer.phone }}</p>
+                <p><strong>Партньор:</strong> {{ producer.owner.username }}</p>
+
+                {% if request.user == producer.owner or request.user.is_superuser %}
+                    <hr>
+                    <a href="{% url 'producer-edit' producer.pk %}" class="btn btn-warning btn-sm mb-2">Редактирай</a>
+                    <a href="{% url 'producer-delete' producer.pk %}" class="btn btn-danger btn-sm">Изтрий</a>
+                {% endif %}
             </div>
+            <a href="{% url 'producer-list' %}" class="btn btn-secondary w-100">Назад към производителите</a>
         </div>
     </div>
+</div>
 {% endblock %}

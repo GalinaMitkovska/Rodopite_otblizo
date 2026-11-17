@@ -3,30 +3,34 @@
 {% block title %}{{ destination.name }} - Родопите отблизо{% endblock %}
 
 {% block content %}
-    <div class="mb-3">
-        <a href="{% url 'destination-list' %}" class="btn btn-outline-secondary btn-sm">&larr; Назад към списъка</a>
-    </div>
-
+<div class="container my-4">
     <div class="row">
-        <div class="col-md-8 offset-md-2">
-            <div class="card shadow-sm">
-                {% if destination.image %}
-                    <img src="{{ destination.image.url }}" class="card-img-top" alt="{{ destination.name }}" style="max-height: 400px; object-fit: cover;">
-                {% endif %}
-                <div class="card-body p-4">
-                    <span class="badge bg-success mb-2">{{ destination.get_category_display }}</span>
-                    <span class="badge bg-secondary mb-2">Трудност: {{ destination.get_difficulty_display }}</span>
-                    <h1 class="fw-bold mb-3">{{ destination.name }}</h1>
-                    <p class="text-muted fs-5">📍 Район: <strong>{{ destination.region }}</strong></p>
-                    <hr>
-                    <h5 class="fw-bold mt-4">Описание:</h5>
-                    <p class="card-text fs-6" style="white-space: pre-line;">{{ destination.description }}</p>
+        <div class="col-md-8">
+            <h1 class="mb-3">{{ destination.name }}</h1>
+            <h4 class="text-muted mb-4">📍 Район: {{ destination.region }} | Категория: {{ destination.get_category_display }}</h4>
 
-                    <div class="mt-4 text-muted small">
-                        Добавено от: <strong>{{ destination.author.username }}</strong> на {{ destination.created_at|date:"d.m.Y H:i" }}
-                    </div>
-                </div>
+            {% if destination.image %}
+                <img src="{{ destination.image.url }}" class="img-fluid rounded mb-4 shadow" alt="{{ destination.name }}" style="max-height: 400px; width: 100%; object-fit: cover;">
+            {% endif %}
+
+            <h3>Описание и история</h3>
+            <p class="lead" style="white-space: pre-line;">{{ destination.description }}</p>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm p-3 mb-4">
+                <h4 class="text-success mb-3">🏔️ Забележителност</h4>
+                <p><strong>Автор:</strong> {{ destination.author.username }}</p>
+                <p><strong>Добавено на:</strong> {{ destination.created_at|date:"d.m.Y" }}</p>
+
+                {% if request.user == destination.author or request.user.is_superuser %}
+                    <hr>
+                    <a href="{% url 'destination-edit' destination.pk %}" class="btn btn-warning btn-sm mb-2">Редактирай</a>
+                    <a href="{% url 'destination-delete' destination.pk %}" class="btn btn-danger btn-sm">Изтрий</a>
+                {% endif %}
             </div>
+            <a href="{% url 'destination-list' %}" class="btn btn-secondary w-100">Назад към списъка</a>
         </div>
     </div>
+</div>
 {% endblock %}
