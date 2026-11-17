@@ -28,25 +28,37 @@
                         <a class="nav-link" href="{% url 'producer-list' %}">Производители</a>
                     </li>
                     <li class="nav-item">
-                        <!-- Скрит/загатнат линк за настаняване (чакащ приложение) -->
-                        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Настаняване</a>
-                    </li>
-                    <li class="nav-item">
-                        <!-- Скрит/загатнат линк за общност/истории (чакащ приложение) -->
-                        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Общност</a>
-                    </li>
+                        <a class="nav-link {% if 'accommodation' in request.resolver_match.url_name %}active fw-bold{% endif %}"
+                        href="{% url 'accommodation_list' %}">
+                        Места за настаняване
+                        </a>
+                  </li>
+                  <li class="nav-item">
+                       <a class="nav-link {% if 'story' in request.resolver_match.url_name %}active fw-bold{% endif %}"
+                        href="{% url 'story_list' %}">
+                        Общност (Пътеписи)
+                       </a>
+                  </li>
                 </ul>
-                <ul class="navbar-nav">
+
+                <!-- Потребителска навигация -->
+                <ul class="navbar-nav align-items-center">
                     {% if user.is_authenticated %}
-                        <li class="nav-item d-flex align-items-center me-2">
+                        <li class="nav-item me-3">
                             <span class="text-white small">Здравей, <strong>{{ user.username }}</strong></span>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link btn btn-outline-light btn-sm text-white px-3" href="/admin/">Админ панел</a>
+                            <form action="{% url 'logout' %}" method="post" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-light btn-sm">Изход</button>
+                            </form>
                         </li>
                     {% else %}
                         <li class="nav-item">
-                            <a class="nav-link" href="/admin/login/">Вход</a>
+                            <a class="nav-link" href="{% url 'login' %}">Вход</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link btn btn-outline-light btn-sm ms-2 px-3 text-success bg-white" href="{% url 'register' %}">Регистрация</a>
                         </li>
                     {% endif %}
                 </ul>

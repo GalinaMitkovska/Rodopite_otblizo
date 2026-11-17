@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container my-4">
+    <div class="row">
+        <div class="col-md-8">
+            <h1 class="mb-3">{{ accommodation.name }}</h1>
+            <h4 class="text-muted mb-4">📍 {{ accommodation.region }} | Тип: {{ accommodation.get_accommodation_type_display }}</h4>
+
+            {% if accommodation.image %}
+                <img src="{{ accommodation.image.url }}" class="img-fluid rounded mb-4 shadow" alt="{{ accommodation.name }}" style="max-height: 400px; width: 100%; object-fit: cover;">
+            {% endif %}
+
+            <h3>Описание и удобства</h3>
+            <p class="lead" style="white-space: pre-line;">{{ accommodation.description }}</p>
+
+            {% if accommodation.nearby_destinations.all %}
+                <h4 class="mt-4">Близки забележителности:</h4>
+                <ul>
+                    {% for dest in accommodation.nearby_destinations.all %}
+                        <li>{{ dest.name }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm p-3 mb-4">
+                <h3 class="text-primary mb-3">{{ accommodation.price_per_night }} лв.</h3>
+                <p><strong>Капацитет:</strong> До {{ accommodation.capacity }} човека</p>
+                <p><strong>Собственик:</strong> {{ accommodation.owner.username }}</p>
+
+                {% if request.user == accommodation.owner %}
+                    <hr>
+                    <a href="{% url 'accommodation_update' accommodation.pk %}" class="btn btn-warning btn-sm mb-2">Редактирай</a>
+                    <a href="{% url 'accommodation_delete' accommodation.pk %}" class="btn btn-danger btn-sm">Изтрий</a>
+                {% endif %}
+            </div>
+            <a href="{% url 'accommodation_list' %}" class="btn btn-secondary w-100">Назад към списъка</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

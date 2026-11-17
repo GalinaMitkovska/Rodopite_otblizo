@@ -28,6 +28,9 @@ urlpatterns = [
     path('accounts/login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
     path('destinations/', include('destinations.urls')),
     path('producers/', include('producers.urls')),
+    path('accommodations/', include('accommodations.urls')),
+    path('community/', include('community.urls')),
+    path('accounts/', include('accounts.urls')),
 ]
 
 

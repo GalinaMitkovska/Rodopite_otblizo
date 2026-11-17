@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h2 class="card-title text-center mb-4">Вход в системата</h2>
+
+                    <form method="post">
+                        {% csrf_token %>
+
+                        <!-- Тук ще излезе грешката, ако паролата или името са грешни -->
+                        {% if form.errors %}
+                            <div class="alert alert-danger">
+                                Грешно потребителско име или парола. Моля, опитайте отново.
+                            </div>
+                        {% endif %}
+
+                        <div class="mb-3">
+                            <label for="id_username" class="form-label fw-bold">Потребителско име</label>
+                            <input type="text" name="username" autofocus autocapitalize="none" autocomplete="username" maxlength="150" required class="form-control" id="id_username" placeholder="Въведете потребителско име">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="id_password" class="form-label fw-bold">Парола</label>
+                            <input type="password" name="password" autocomplete="current-password" required class="form-control" id="id_password" placeholder="Въведете парола">
+                        </div>
+
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-success btn-lg">Вход</button>
+                        </div>
+                    </form>
+
+                    <hr class="my-4">
+                    <div class="text-center">
+                        <p class="mb-0">Нямате регистриран профил? <a href="{% url 'register' %}">Регистрирайте се сега</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
