@@ -5,6 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
 from .models import TravelStory
 from .forms import TravelStoryForm
+from .tasks import send_new_story_email
 
 
 class StoryListView(ListView):
@@ -28,7 +29,13 @@ class StoryCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.author = self.request.user
-        return super().form_valid(form)
+        response = super().form_valid(form)
+        send_new_story_email.delay(
+            self.object.title,
+            self.request.user.username,
+            self.request.user.email,
+        )
+        return response
 
 
 class StoryUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):

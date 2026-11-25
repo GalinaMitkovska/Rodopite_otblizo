@@ -9,7 +9,7 @@
                     <h2 class="card-title text-center mb-4">Вход в системата</h2>
 
                     <form method="post">
-                        {% csrf_token %>
+                        {% csrf_token %}
 
                         <!-- Тук ще излезе грешката, ако паролата или името са грешни -->
                         {% if form.errors %}

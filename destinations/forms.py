@@ -27,3 +27,27 @@ class DestinationForm(forms.ModelForm):
         if description and len(description) < 10:
             raise ValidationError('Описанието трябва да съдържа поне 10 символа!')
         return description
+
+
+class DestinationUpdateForm(DestinationForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['name'].disabled = True
+        self.fields['name'].help_text = 'Името на забележителността не може да се променя след създаване.'
+
+
+class DestinationSearchForm(forms.Form):
+    query = forms.CharField(
+        required=False,
+        label='Търсене',
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Търси по име или регион...',
+        }),
+    )
+    category = forms.ChoiceField(
+        required=False,
+        label='Категория',
+        choices=[('', 'Всички категории')] + list(Destination.CATEGORY_CHOICES),
+        widget=forms.Select(attrs={'class': 'form-control'}),
+    )

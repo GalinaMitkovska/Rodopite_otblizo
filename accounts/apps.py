@@ -10,6 +10,21 @@ def create_user_groups(sender, **kwargs):
     from destinations.models import Destination
     from community.models import TravelStory
 
+    all_models = [Accommodation, Producer, Destination, TravelStory]
+
+    # 1. Обикновени регистрирани потребители — само права за разглеждане (view)
+    users_group, _ = Group.objects.get_or_create(name='Registered Users')
+    user_permissions = []
+    for model in all_models:
+        ct = ContentType.objects.get_for_model(model)
+        perms = Permission.objects.filter(
+            content_type=ct,
+            codename=f'view_{model._meta.model_name}',
+        )
+        user_permissions.extend(perms)
+    users_group.permissions.set(user_permissions)
+
+    # 2. Local Partners — места за настаняване и производители (view, add, change)
     partners_group, _ = Group.objects.get_or_create(name='Local Partners')
     partner_models = [Accommodation, Producer]
     partner_permissions = []
@@ -17,12 +32,16 @@ def create_user_groups(sender, **kwargs):
         ct = ContentType.objects.get_for_model(model)
         perms = Permission.objects.filter(
             content_type=ct,
-            codename__in=[f'add_{model._meta.model_name}', f'change_{model._meta.model_name}', f'view_{model._meta.model_name}']
+            codename__in=[
+                f'add_{model._meta.model_name}',
+                f'change_{model._meta.model_name}',
+                f'view_{model._meta.model_name}',
+            ],
         )
         partner_permissions.extend(perms)
     partners_group.permissions.set(partner_permissions)
 
-
+    # 3. Content Moderators — дестинации и пътеписи (view, add, change, delete)
     moderators_group, _ = Group.objects.get_or_create(name='Content Moderators')
     moderator_models = [Destination, TravelStory]
     moderator_permissions = []
@@ -30,7 +49,12 @@ def create_user_groups(sender, **kwargs):
         ct = ContentType.objects.get_for_model(model)
         perms = Permission.objects.filter(
             content_type=ct,
-            codename__in=[f'add_{model._meta.model_name}', f'change_{model._meta.model_name}', f'delete_{model._meta.model_name}', f'view_{model._meta.model_name}']
+            codename__in=[
+                f'add_{model._meta.model_name}',
+                f'change_{model._meta.model_name}',
+                f'delete_{model._meta.model_name}',
+                f'view_{model._meta.model_name}',
+            ],
         )
         moderator_permissions.extend(perms)
     moderators_group.permissions.set(moderator_permissions)
@@ -41,5 +65,5 @@ class AccountsConfig(AppConfig):
     name = 'accounts'
 
     def ready(self):
-        import accounts.signals
+        import accounts.signals  # noqa: F401
         post_migrate.connect(create_user_groups, sender=self)

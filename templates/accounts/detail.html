@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Профил на {{ profile.user.username }}</h1>
+    <p><strong>Имейл:</strong> {{ profile.user.email }}</p>
+    <p><strong>Информация:</strong> {{ profile.bio|default:"Все още няма добавена информация." }}</p>
+
+    {% if profile.profile_picture %}
+        <div class="mb-3">
+            <img src="{{ profile.profile_picture.url }}" alt="Профилна снимка на {{ profile.user.username }}" class="img-thumbnail" style="max-width: 220px;">
+        </div>
+    {% endif %}
+
+    <a href="{% url 'profile-edit' %}" class="btn btn-primary">Редактирай профила</a>
+
+    <h2 class="mt-4">Любими забележителности</h2>
+    {% if profile.favorite_destinations.all %}
+        <ul>
+            {% for dest in profile.favorite_destinations.all %}
+                <li><a href="{% url 'destination-detail' dest.pk %}">{{ dest.name }}</a> ({{ dest.region }})</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Все още няма добавени любими забележителности.</p>
+    {% endif %}
+</div>
+{% endblock %}

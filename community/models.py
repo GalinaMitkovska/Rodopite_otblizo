@@ -23,7 +23,6 @@ class TravelStory(models.Model):
         verbose_name='Дата на публикуване',
     )
 
-    # Many-to-One връзка: Автор на пътеписа
     author = models.ForeignKey(
         UserModel,
         on_delete=models.CASCADE,

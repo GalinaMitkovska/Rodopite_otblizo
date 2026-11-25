@@ -3,6 +3,7 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, ListView, UpdateView, DeleteView
 from .forms import DestinationForm
 from .models import Destination
+from django.shortcuts import render
 
 
 class DestinationListView(ListView):
@@ -41,3 +42,7 @@ class DestinationDeleteView(LoginRequiredMixin, DeleteView):
     model = Destination
     template_name = 'destinations/destination_confirm_delete.html'
     success_url = reverse_lazy('destination-list')
+
+def home(request):
+    destinations = Destination.objects.all()
+    return render(request, 'destinations/destination_list.html', {'destinations': destinations})

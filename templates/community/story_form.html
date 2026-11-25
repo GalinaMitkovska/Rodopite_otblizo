@@ -6,18 +6,27 @@
         <div class="col-md-8">
             <div class="card shadow">
                 <div class="card-body">
-                    <h2 class="card-title text-center mb-4">
-                        {% if form.instance.pk %}Редактирай пътепис{% else %}Сподели нов пътепис{% endif %}
-                    </h2>
+                    {% if form.instance.pk and perms.community.change_story or not form.instance.pk and perms.community.add_story %}
+                        <h2 class="card-title text-center mb-4">
+                            {% if form.instance.pk %}Редактирай пътепис{% else %}Сподели нов пътепис{% endif %}
+                        </h2>
 
-                    <form method="post" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        {{ form.as_p }}
-                        <div class="d-grid gap-2 mt-4">
-                            <button type="submit" class="btn btn-success btn-lg">Публикувай</button>
-                            <a href="{% url 'story_list' %}" class="btn btn-secondary">Отказ</a>
+                        <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                            <div class="d-grid gap-2 mt-4">
+                                <button type="submit" class="btn btn-success btn-lg">Публикувай</button>
+                                <a href="{% url 'story_list' %}" class="btn btn-secondary">Отказ</a>
+                            </div>
+                        </form>
+                    {% else %}
+                        <div class="alert alert-warning text-center mb-3">
+                            Нямаш права да добавяш или редактираш пътеписи.
                         </div>
-                    </form>
+                        <div class="text-center">
+                            <a href="{% url 'story_list' %}" class="btn btn-secondary">Назад към пътеписите</a>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
