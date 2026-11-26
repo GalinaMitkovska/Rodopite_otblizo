@@ -10,6 +10,7 @@ from community.models import TravelStory
 from community.tasks import send_new_story_email
 from destinations.models import Destination
 from producers.models import Producer
+from django.db import IntegrityError, transaction
 
 User = get_user_model()
 
@@ -44,12 +45,13 @@ class RodopiteOtBlizoTests(TestCase):
         self.assertEqual(self.user1.profile.user, self.user1)
 
     def test_03_duplicate_email_raises_error(self):
-        with self.assertRaises(Exception):
-            User.objects.create_user(
-                username='ivan_clone',
-                email='ivan@example.com',
-                password='StrongPassword123!',
-            )
+        with self.assertRaises(IntegrityError):
+            with transaction.atomic():
+                User.objects.create_user(
+                    username='ivan_clone',
+                    email='ivan@example.com',
+                    password='StrongPassword123!',
+                )
 
     def test_04_destination_short_description_fails_validation(self):
         dest = Destination(
@@ -164,3 +166,44 @@ class RodopiteOtBlizoTests(TestCase):
     def test_15_missing_page_returns_404(self):
         response = self.client.get('/nesushtestvuvasht-url-za-test/')
         self.assertEqual(response.status_code, 404)
+
+
+
+    def test_16_other_user_cannot_edit_destination(self):
+        self.client.force_login(self.user2)
+
+        response = self.client.get(
+            reverse('destination-edit', kwargs={'pk': self.destination.pk})
+        )
+
+        self.assertEqual(response.status_code, 404)
+
+    def test_17_other_user_cannot_delete_destination(self):
+        self.client.force_login(self.user2)
+
+        response = self.client.get(
+            reverse('destination-delete', kwargs={'pk': self.destination.pk})
+        )
+
+        self.assertEqual(response.status_code, 404)
+
+    def test_18_owner_can_edit_destination(self):
+        self.client.force_login(self.user1)
+
+        response = self.client.get(
+            reverse('destination-edit', kwargs={'pk': self.destination.pk})
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_19_owner_can_delete_destination(self):
+        self.client.force_login(self.user1)
+
+        response = self.client.post(
+            reverse('destination-delete', kwargs={'pk': self.destination.pk})
+        )
+
+        self.assertEqual(response.status_code, 302)
+        self.assertFalse(
+            Destination.objects.filter(pk=self.destination.pk).exists()
+        )

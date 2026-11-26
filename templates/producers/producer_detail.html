@@ -23,7 +23,7 @@
                 <p><strong>Телефон:</strong> {{ producer.phone }}</p>
                 <p><strong>Партньор:</strong> {{ producer.owner.username }}</p>
 
-                {% if request.user == producer.owner or request.user.is_superuser %}
+                {% if request.user == producer.owner %}
                     <hr>
                     <a href="{% url 'producer-edit' producer.pk %}" class="btn btn-warning btn-sm mb-2">Редактирай</a>
                     <a href="{% url 'producer-delete' producer.pk %}" class="btn btn-danger btn-sm">Изтрий</a>

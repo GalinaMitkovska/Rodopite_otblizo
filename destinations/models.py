@@ -6,8 +6,13 @@ UserModel = get_user_model()
 
 
 def validate_min_length(value):
-    if len(value.strip()) < 10:
-        raise ValidationError('Описанието трябва да бъде поне 10 символа.')
+    cleaned_value = value.strip()
+
+    if len(cleaned_value) < 10:
+        raise ValidationError(
+            'Описанието трябва да бъде поне 10 символа.'
+        )
+
 
 
 class Destination(models.Model):

@@ -21,7 +21,7 @@ class RegisterView(CreateView):
 
 class ProfileDetailView(LoginRequiredMixin, DetailView):
     model = UserProfile
-    template_name = 'accounts/profile_detail.html'
+    template_name = 'accounts/detail.html'
     context_object_name = 'profile'
 
     def get_object(self, queryset=None):
@@ -32,8 +32,8 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
 class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     model = UserProfile
     form_class = UserProfileUpdateForm
-    template_name = 'accounts/profile_edit.html'
-    success_url = reverse_lazy('profile-detail')
+    template_name = 'accounts/edit.html'
+    success_url = reverse_lazy('detail')
 
     def get_object(self, queryset=None):
         profile, _ = UserProfile.objects.get_or_create(user=self.request.user)

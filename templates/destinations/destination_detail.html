@@ -23,7 +23,7 @@
                 <p><strong>Автор:</strong> {{ destination.author.username }}</p>
                 <p><strong>Добавено на:</strong> {{ destination.created_at|date:"d.m.Y" }}</p>
 
-                {% if request.user == destination.author or request.user.is_superuser %}
+                {% if request.user.is_authenticated and request.user == destination.author %}
                     <hr>
                     <a href="{% url 'destination-edit' destination.pk %}" class="btn btn-warning btn-sm mb-2">Редактирай</a>
                     <a href="{% url 'destination-delete' destination.pk %}" class="btn btn-danger btn-sm">Изтрий</a>
